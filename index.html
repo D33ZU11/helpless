@@ -6,95 +6,355 @@
     <title>The Shadow Grimoire | Veil of Whispers</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=IM+Fell+English+SC&family=MedievalSharp&display=swap" rel="stylesheet">
     <style>
-        /* All your styles remain exactly as you designed them */
-        * { user-select: none; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        :root { --gold: #e4c580; --blood: #8b2a2a; --void: #03000a; --parchment: #f2e9d0; }
-        body { background: radial-gradient(ellipse at 30% 40%, #2c1420 0%, var(--void) 100%); color: var(--gold); font-family: 'IM Fell English SC', serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 10px; overflow-x: hidden; perspective: 1200px; }
-        .card-holder { position: relative; width: 290px; height: 400px; z-index: 20; margin: 15px 0; filter: drop-shadow(0 15px 45px rgba(0,0,0,0.9)); }
-        .card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        * {
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #e4c580;
+            --blood: #8b2a2a;
+            --void: #03000a;
+            --parchment: #f2e9d0;
+            --ember: #ff7e4a;
+        }
+
+        body {
+            background: radial-gradient(ellipse at 30% 40%, #2c1420 0%, var(--void) 100%);
+            color: var(--gold);
+            font-family: 'IM Fell English SC', serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 10px;
+            overflow-x: hidden;
+            perspective: 1200px;
+        }
+
+        .veil, .candle-glow {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .veil {
+            background-image: radial-gradient(2px 2px at 20% 30%, var(--gold) 1px, transparent 1px),
+                              radial-gradient(1px 1px at 70% 85%, #b96f30 1px, transparent 1px);
+            background-size: 70px 70px, 40px 40px;
+            opacity: 0.2;
+            animation: driftRunes 35s linear infinite;
+        }
+
+        @keyframes driftRunes {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 500px; }
+        }
+
+        .grimoire-header {
+            text-align: center;
+            z-index: 15;
+            margin: 10px 0;
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 1.45rem;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, #efd592 10%, #b48b3a 70%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(228, 197, 128, 0.4);
+            margin: 0;
+        }
+
+        .sub {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #b48b5a;
+            text-transform: uppercase;
+            border-top: 1px solid rgba(228, 197, 128, 0.3);
+            display: inline-block;
+            padding-top: 4px;
+        }
+
+        /* The Card - Sexy & Readable */
+        .card-holder {
+            position: relative;
+            width: 290px;
+            height: 400px;
+            z-index: 20;
+            margin: 15px 0;
+            filter: drop-shadow(0 15px 45px rgba(0,0,0,0.9));
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         .card.flipped { transform: rotateY(180deg); }
-        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 25px; border: 2px solid var(--gold); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; box-shadow: inset 0 0 60px rgba(0,0,0,0.95); }
-        .card-front { background: #0f0712; }
-        .card-back { background: linear-gradient(145deg, #1a0b1c 0%, #050308 100%); transform: rotateY(180deg); color: var(--parchment); font-family: 'MedievalSharp', serif; font-size: 1.1rem; line-height: 1.4; border: 2px solid #634d2a; overflow-y: auto; }
-        .ritual-altar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 350px; z-index: 25; margin-top: 10px; }
-        button { background: rgba(15, 8, 20, 0.9); border: 1px solid var(--gold); color: var(--gold); padding: 12px 5px; font-family: 'Cinzel Decorative', cursive; font-size: 0.75rem; border-radius: 10px; cursor: pointer; }
-        .btn-wide { grid-column: span 3; }
-        .pact-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.97); z-index: 100; display: none; align-items: center; justify-content: center; }
-        .pact-card { background: #120b17; border: 2px solid var(--gold); padding: 35px; border-radius: 20px; text-align: center; width: 85%; }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 25px;
+            border: 2px solid var(--gold);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+            box-shadow: inset 0 0 60px rgba(0,0,0,0.95);
+        }
+
+        .card-front {
+            background: #0f0712 url('https://www.transparenttextures.com/patterns/hexellence.png');
+        }
+
+        .card-back {
+            background: linear-gradient(145deg, #1a0b1c 0%, #050308 100%);
+            transform: rotateY(180deg);
+            color: var(--parchment);
+            font-family: 'MedievalSharp', serif;
+            font-size: 1.15rem;
+            line-height: 1.5;
+            justify-content: center;
+            border: 2px solid #634d2a;
+        }
+
+        .ritual-text {
+            text-shadow: 2px 2px 8px rgba(0,0,0,1);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Buttons - Balanced & Large */
+        .ritual-altar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            max-width: 350px;
+            z-index: 25;
+            margin-top: 10px;
+        }
+
+        button {
+            background: rgba(15, 8, 20, 0.9);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 12px 5px;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 0.75rem;
+            border-radius: 10px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        button:active { background: var(--gold); color: var(--void); transform: scale(0.96); }
+
+        .btn-wide {
+            grid-column: span 3;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            background: rgba(35, 15, 30, 0.8);
+            border-color: #aa8866;
+        }
+
+        .btn-abyss { border-color: var(--blood); color: #ff8888; }
+
+        .banish-rune {
+            margin-top: 20px;
+            width: 180px;
+            background: transparent;
+            border: 1px dashed var(--gold);
+            font-size: 0.65rem;
+            opacity: 0.6;
+            z-index: 30;
+            color: #b48b5a;
+        }
+
+        /* Modal Overlay */
+        .pact-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.97);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .pact-card {
+            background: #120b17;
+            border: 2px solid var(--gold);
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            width: 85%;
+            max-width: 300px;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
+        }
+
+        .pact-card h2 {
+            font-family: 'Cinzel Decorative';
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
+    <div class="veil"></div>
+    <div class="candle-glow"></div>
+
+    <div class="grimoire-header">
+        <h1>🜏 THE SHADOW GRIMOIRE 🜏</h1>
+        <div class="sub">✧ Rites of the Unspoken ✧</div>
+    </div>
 
     <div class="card-holder" id="cardContainer">
         <div class="card" id="ritualCard">
-            <div class="card-face card-front"><h1>◈</h1><p>TOUCH THE VEIL</p></div>
-            <div class="card-face card-back" id="oracleText"><div class="ritual-text">Speak the command...</div></div>
+            <div class="card-face card-front">
+                <div style="font-size: 4rem; margin-bottom: 10px; color: var(--gold); opacity: 0.8;">◈</div>
+                <p style="letter-spacing: 3px; font-size: 0.9rem;">TOUCH THE VEIL</p>
+            </div>
+            <div class="card-face card-back" id="oracleText">
+                <div class="ritual-text">Speak the command...</div>
+            </div>
         </div>
     </div>
 
     <div class="ritual-altar">
         <button onclick="handleRitual('standard')">Standard</button>
         <button onclick="handleRitual('tithe')">Queen's Tithe</button>
-        <button onclick="handleRitual('abyss')">The Abyss</button>
-        <button onclick="handleRitual('finish')" class="btn-wide">Final Judgment</button>
-        <button onclick="handleRitual('disposal')" class="btn-wide">The Disposal</button>
-        <button onclick="handleRitual('sanctuary')" class="btn-wide">The Afterglow</button>
+        <button onclick="handleRitual('abyss')" class="btn-abyss">The Abyss</button>
+        <button onclick="handleRitual('finish')" class="btn-wide">⚔️ Final Judgment</button>
+        <button onclick="handleRitual('disposal')" class="btn-wide">🍷 The Disposal · Cherished</button>
+        <button onclick="handleRitual('sanctuary')" class="btn-wide">🕯️ The Afterglow</button>
     </div>
+
+    <button onclick="veto()" class="banish-rune">◉ BURN & BANISH ◉</button>
 
     <div id="pactOverlay" class="pact-overlay">
         <div class="pact-card">
             <h2>Invoke the Rite?</h2>
             <div style="display: flex; gap: 15px; justify-content: center;">
-                <button onclick="confirmPact(true)">Seal Pact</button>
-                <button onclick="confirmPact(false)">Retreat</button>
+                <button onclick="confirmPact(true)" style="padding: 12px 20px; flex: 1;">Seal Pact</button>
+                <button onclick="confirmPact(false)" style="padding: 12px 20px; flex: 1; border-color: #444; color: #888;">Retreat</button>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        // Import your descriptions from the separate file
-        import { RitualDecks } from './rituals.js';
-        
+    <script>
+        const RitualDecks = {
+            standard: [
+                "THE GRAVITY WELL · Secure weights to the sac. Stand motionless for 3 minutes. Any tremor earns a slow, crushing squeeze.", 
+                "THE CROW'S PINCH · With sharp nails, find the skin between. Pull and pinch while you whisper my true title.", 
+                "THE WICKED TWIST · Rotate the flesh a full half-turn. Hold while you recite: 'I am yours.'",
+                "THE CRUSHING DEPTHS · Place between your palms and slowly lean weight into them. Count ten heartbeats."
+            ],
+            abyss: [
+                "THE IRON GALLOWS · Weights attached. Stand on tiptoes. Each time heels touch floor, deliver a brutal squeeze.", 
+                "THE SILENT ANCHOR · Heavy clamp applied. Ignored for 10 minutes kneeling.",
+                "THE WEAVER'S NEEDLE · Trace the seams with a pin. Agonizing light pressure then a violent pinch at random."
+            ],
+            tithe: [
+                "FOOTREST · Legs spread, sac weighted. Support her feet while she rests.", 
+                "THE ROYAL CLEANSE · Use your tongue to clean her soles while the sac is stretched.",
+                "THE MARKET PRICE · She marks you with ink: 'Tribute' across stretched skin. Wear it for one hour."
+            ],
+            finish: [
+                "THE RUINED OFFERING · Edge to absolute brink— then a crushing squeeze and an ice shard. No release.", 
+                "THE BROKEN PRAYER · Release granted only while being painfully twisted. Thank her for the agony."
+            ],
+            disposal: [
+                "THE CLAY MASK · Applied to her face and lips. Worn as a sacred, silent statue.", 
+                "THE GILDED COLLAR · Poured over her neck and chest. A permanent mark of the night's surrender.",
+                "THE BITTER SWALLOW · She takes it all while maintaining eye contact. Total consumption."
+            ],
+            sanctuary: [
+                "THE HEALER’S HANDS · Release all bindings. Cradle in warm palms with slow, loving strokes.", 
+                "THE ANOINTING · Massage with blessed oil. 'You served well, beloved.'",
+                "THE MOON SALVE · Cooling balm applied over all tender parts. Safety until dawn."
+            ]
+        };
+
         let lastCategory = '';
         let pendingCategory = '';
         const card = document.getElementById('ritualCard');
         const oracle = document.getElementById('oracleText');
 
-        // This makes the internal functions "Global" so the HTML buttons can see them
-        window.handleRitual = function(category) {
-            if (category !== 'standard' && category !== 'sanctuary' && category !== lastCategory) {
+        function handleRitual(category) {
+            // Check if we need the popup: 
+            // 1. Not 'standard'
+            // 2. Different from the last time we draw a card
+            if (category !== 'standard' && category !== lastCategory) {
                 pendingCategory = category;
                 document.getElementById('pactOverlay').style.display = 'flex';
             } else {
                 drawCard(category);
             }
-        };
+        }
 
-        window.confirmPact = function(yes) {
+        function confirmPact(yes) {
             document.getElementById('pactOverlay').style.display = 'none';
             if (yes) {
-                lastCategory = pendingCategory;
+                lastCategory = pendingCategory; // Update category only after sealing
                 drawCard(pendingCategory);
-            }
-        };
-
-        function drawCard(category) {
-            const deck = RitualDecks[category];
-            if (!deck) return; // Safety check
-            const text = deck[Math.floor(Math.random() * deck.length)];
-            
-            if (card.classList.contains('flipped')) {
-                card.classList.remove('flipped');
-                setTimeout(() => { 
-                    oracle.innerHTML = `<div class="ritual-text">${text}</div>`; 
-                    card.classList.add('flipped'); 
-                }, 400);
-            } else { 
-                oracle.innerHTML = `<div class="ritual-text">${text}</div>`; 
-                card.classList.add('flipped'); 
             }
         }
 
+        function drawCard(category) {
+            const deck = RitualDecks[category];
+            const text = deck[Math.floor(Math.random() * deck.length)];
+            
+            // Animation sequence: if flipped, unflip first, change, then flip back
+            if (card.classList.contains('flipped')) {
+                card.classList.remove('flipped');
+                setTimeout(() => {
+                    oracle.innerHTML = `<div class="ritual-text">${text}</div>`;
+                    card.classList.add('flipped');
+                }, 400);
+            } else {
+                oracle.innerHTML = `<div class="ritual-text">${text}</div>`;
+                card.classList.add('flipped');
+            }
+        }
+
+        function veto() {
+            card.style.transition = '0.3s';
+            card.style.transform = 'scale(0.8) rotate(-10deg)';
+            card.style.opacity = '0';
+            
+            setTimeout(() => {
+                card.classList.remove('flipped');
+                oracle.innerHTML = `<div class="ritual-text">Sigil Burned...</div>`;
+                card.style.transform = 'scale(1) rotate(0deg)';
+                card.style.opacity = '1';
+                // Reset category tracking so popups trigger again if needed
+                lastCategory = ''; 
+                drawCard('standard');
+            }, 400);
+        }
+
+        // Manual flip by clicking the card
         document.getElementById('cardContainer').onclick = () => card.classList.toggle('flipped');
     </script>
 </body>
