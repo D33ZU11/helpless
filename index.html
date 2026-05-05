@@ -6,6 +6,7 @@
     <title>The Shadow Grimoire | Veil of Whispers</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=IM+Fell+English+SC&family=MedievalSharp&display=swap" rel="stylesheet">
     <style>
+        /* All your styles remain exactly as you designed them */
         * { user-select: none; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         :root { --gold: #e4c580; --blood: #8b2a2a; --void: #03000a; --parchment: #f2e9d0; }
         body { background: radial-gradient(ellipse at 30% 40%, #2c1420 0%, var(--void) 100%); color: var(--gold); font-family: 'IM Fell English SC', serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 10px; overflow-x: hidden; perspective: 1200px; }
@@ -23,6 +24,7 @@
     </style>
 </head>
 <body>
+
     <div class="card-holder" id="cardContainer">
         <div class="card" id="ritualCard">
             <div class="card-face card-front"><h1>◈</h1><p>TOUCH THE VEIL</p></div>
@@ -50,6 +52,7 @@
     </div>
 
     <script type="module">
+        // Import your descriptions from the separate file
         import { RitualDecks } from './rituals.js';
         
         let lastCategory = '';
@@ -57,7 +60,7 @@
         const card = document.getElementById('ritualCard');
         const oracle = document.getElementById('oracleText');
 
-        // Logic for triggering the ritual
+        // This makes the internal functions "Global" so the HTML buttons can see them
         window.handleRitual = function(category) {
             if (category !== 'standard' && category !== 'sanctuary' && category !== lastCategory) {
                 pendingCategory = category;
@@ -67,7 +70,6 @@
             }
         };
 
-        // Modal Confirmation
         window.confirmPact = function(yes) {
             document.getElementById('pactOverlay').style.display = 'none';
             if (yes) {
@@ -76,14 +78,13 @@
             }
         };
 
-        // Function to select and display the card
         function drawCard(category) {
             const deck = RitualDecks[category];
+            if (!deck) return; // Safety check
             const text = deck[Math.floor(Math.random() * deck.length)];
             
             if (card.classList.contains('flipped')) {
                 card.classList.remove('flipped');
-                // Small delay to allow card to flip back before text changes
                 setTimeout(() => { 
                     oracle.innerHTML = `<div class="ritual-text">${text}</div>`; 
                     card.classList.add('flipped'); 
@@ -94,7 +95,6 @@
             }
         }
 
-        // Manual flip toggle
         document.getElementById('cardContainer').onclick = () => card.classList.toggle('flipped');
     </script>
 </body>
