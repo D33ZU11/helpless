@@ -2,592 +2,272 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>The Shadow Grimoire | Ritual of the Toy</title>
-    <!-- Enhanced Fonts & Vibe -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=IM+Fell+English+SC&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            user-select: none; /* immersive, no accidental text selection */
-        }
+        * { user-select: none; -webkit-tap-highlight-color: transparent; }
 
         :root {
             --gold: #e4c580;
             --gold-glow: #ffdd99;
             --blood: #8b2a2a;
-            --blood-dark: #5e1a1a;
             --void: #03000a;
-            --deep-purple: #160b1c;
+            --purple-haze: #1a0b1c;
             --parchment: #f2e9d0;
-            --ash: #2c2420;
-            --ritual-red: #b53333;
         }
 
         body {
-            background: radial-gradient(ellipse at 30% 40%, #1e0f1c 0%, var(--void) 100%);
+            background: radial-gradient(circle at center, var(--purple-haze) 0%, var(--void) 100%);
             color: var(--gold);
-            font-family: 'IM Fell English SC', 'Nanum Myeongjo', serif;
+            font-family: 'IM Fell English SC', serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            overflow-x: hidden;
-            position: relative;
-            padding: 20px;
+            overflow: hidden;
+            perspective: 1000px;
         }
 
-        /* occult animated vignette & runic overlay */
-        body::before {
-            content: "";
+        /* Animated Ember/Dust Particles */
+        .particles {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.7) 100%);
+            top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
-            z-index: 2;
+            background-image: radial-gradient(circle, var(--gold) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.1;
+            animation: moveParticles 20s linear infinite;
         }
 
-        body::after {
-            content: "";
+        @keyframes moveParticles {
+            from { background-position: 0 0; }
+            to { background-position: 500px 1000px; }
+        }
+
+        /* Candle Flicker Overlay */
+        .flicker {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(212, 175, 55, 0.02) 0px, rgba(212, 175, 55, 0.02) 2px, transparent 2px, transparent 6px);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.1);
+            animation: candleFlicker 3s infinite;
             pointer-events: none;
-            z-index: 2;
-            animation: shiftLines 12s linear infinite;
+            z-index: 5;
         }
 
-        @keyframes shiftLines {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 20px; }
-        }
-
-        /* flickering candle effect */
-        @keyframes ambientFlicker {
-            0%, 100% { opacity: 0.08; }
-            30% { opacity: 0.15; }
-            60% { opacity: 0.05; }
-            85% { opacity: 0.12; }
-        }
-
-        .flicker-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.25);
-            pointer-events: none;
-            z-index: 10;
-            animation: ambientFlicker 4s infinite;
+        @keyframes candleFlicker {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.05; }
+            70% { opacity: 0.15; }
         }
 
         h1 {
             font-family: 'Cinzel Decorative', cursive;
-            font-size: 2rem;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-            background: linear-gradient(135deg, #e8d49a, #b48c3a);
+            font-size: 1.8rem;
+            letter-spacing: 6px;
+            background: linear-gradient(to bottom, var(--gold), #856d3c);
             -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 10px rgba(0,0,0,0.5), 0 0 2px rgba(212,175,55,0.4);
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 5;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            filter: drop-shadow(0 0 5px rgba(228, 197, 128, 0.3));
         }
 
         .sub {
             font-size: 0.7rem;
-            letter-spacing: 3px;
-            color: #aa8e54;
-            margin-top: -18px;
+            letter-spacing: 4px;
+            color: #7a6a4a;
             margin-bottom: 25px;
-            font-family: monospace;
         }
 
-        /* CARD CONTAINER with occult frame */
         #card-table {
             position: relative;
-            width: 360px;
-            height: 520px;
-            perspective: 1800px;
-            z-index: 20;
-            margin: 10px auto;
+            width: 320px;
+            height: 480px;
+            z-index: 10;
         }
 
-        /* mystical glow around card */
-        #card-table::before {
-            content: "";
+        /* The Aura around the card when revealed */
+        .card-aura {
             position: absolute;
-            top: -15px;
-            left: -15px;
-            right: -15px;
-            bottom: -15px;
-            border-radius: 30px;
-            background: radial-gradient(circle, rgba(212,175,55,0.2), transparent 70%);
-            filter: blur(12px);
-            z-index: -1;
-            opacity: 0.6;
-            transition: opacity 0.5s;
+            top: 50%; left: 50%;
+            width: 120%; height: 120%;
+            background: radial-gradient(circle, rgba(139, 42, 42, 0.4) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.8s;
             pointer-events: none;
+        }
+
+        .card.flipped ~ .card-aura { opacity: 1; animation: pulseAura 2s infinite; }
+
+        @keyframes pulseAura {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
         }
 
         .card {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 1s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.6s ease;
-            cursor: pointer;
-            border-radius: 24px;
-            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(212, 175, 55, 0.3) inset;
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 20px;
         }
 
-        .card.flipped {
-            transform: rotateY(180deg);
+        .card.flipped { transform: rotateY(180deg) rotateZ(-2deg); }
+        
+        .card.burn { 
+            animation: burnAway 0.6s forwards;
         }
 
-        .card.burn {
-            opacity: 0;
-            transform: scale(0.75) rotateY(180deg) rotateZ(5deg);
-            filter: blur(4px);
-            transition: transform 0.5s ease-out, opacity 0.4s ease;
-            pointer-events: none;
-        }
-
-        /* PULSE ANIMATION when drawing new card */
-        @keyframes drawRitual {
-            0% { box-shadow: 0 0 0 0 rgba(212,175,55,0.7), 0 0 0 0 rgba(180, 60, 50, 0.4); }
-            50% { box-shadow: 0 0 0 12px rgba(212,175,55,0.2), 0 0 0 25px rgba(139,42,42,0.1); }
-            100% { box-shadow: 0 20px 35px rgba(0,0,0,0.6), 0 0 0 2px rgba(212, 175, 55, 0.3) inset; }
-        }
-
-        .draw-pulse {
-            animation: drawRitual 0.6s ease-out;
+        @keyframes burnAway {
+            0% { transform: scale(1); filter: brightness(1) sepia(0); }
+            50% { transform: scale(1.1) rotate(5deg); filter: brightness(2) sepia(1) hue-rotate(-50deg); }
+            100% { transform: scale(0); opacity: 0; filter: brightness(5); }
         }
 
         .card-face {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             backface-visibility: hidden;
-            border-radius: 24px;
+            border-radius: 20px;
+            border: 2px solid var(--gold);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 30px 24px;
+            padding: 30px;
             box-sizing: border-box;
-            text-align: center;
-            transition: all 0.3s;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.8);
         }
 
-        /* front side - ornate dark */
         .card-front {
-            background: radial-gradient(ellipse at 30% 40%, #1f131e, #0a0308);
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path fill="none" stroke="%23d4af37" stroke-width="0.6" d="M20,30 L80,30 M20,50 L80,50 M20,70 L80,70 M30,20 L30,80 M50,20 L50,80 M70,20 L70,80" stroke-dasharray="3 3"/><circle cx="50" cy="50" r="15" stroke="%23d4af37" fill="none" stroke-width="1"/></svg>');
-            background-size: 40px;
-            border: 1px solid rgba(212, 175, 55, 0.7);
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+            background: #0c0810;
+            background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png');
         }
 
         .card-back {
-            background: linear-gradient(145deg, #0e0a14 0%, #1b1222 100%);
+            background: linear-gradient(135deg, #120a16 0%, #050505 100%);
             transform: rotateY(180deg);
             color: var(--parchment);
-            font-size: 1.22rem;
-            font-weight: 500;
-            line-height: 1.55;
-            border: 1px solid var(--blood);
-            box-shadow: inset 0 0 18px rgba(90, 0, 0, 0.5);
-            text-shadow: 0px 1px 2px black;
-            word-break: break-word;
-            overflow-y: auto;
-            font-family: 'IM Fell English SC', 'Nanum Myeongjo', serif;
+            font-size: 1.4rem;
+            text-align: center;
+            border-color: var(--blood);
+            box-shadow: inset 0 0 40px rgba(139, 42, 42, 0.2);
         }
 
-        /* custom scroll for card text */
-        .card-back::-webkit-scrollbar {
-            width: 4px;
-        }
-        .card-back::-webkit-scrollbar-track {
-            background: #2a1a1a;
-            border-radius: 10px;
-        }
-        .card-back::-webkit-scrollbar-thumb {
-            background: var(--gold);
-            border-radius: 10px;
-        }
-
-        .seal-icon {
-            font-size: 4rem;
+        .seal {
+            font-size: 5rem;
             margin-bottom: 20px;
-            filter: drop-shadow(0 0 6px #d4af37);
-            font-family: 'Cinzel Decorative', cursive;
-            animation: subtlePulse 3s infinite;
+            color: var(--gold);
+            text-shadow: 0 0 20px var(--gold);
         }
 
-        @keyframes subtlePulse {
-            0% { opacity: 0.8; text-shadow: 0 0 2px gold; }
-            100% { opacity: 1; text-shadow: 0 0 12px #c9a03d; }
-        }
-
-        .card-front p {
-            letter-spacing: 5px;
-            font-size: 0.8rem;
-            margin-top: 20px;
-            border-top: 1px solid rgba(212,175,55,0.4);
-            padding-top: 15px;
-            width: 80%;
-        }
-
-        /* modern controls with runic touches */
         .controls {
-            margin-top: 45px;
+            margin-top: 40px;
             display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-            z-index: 15;
+            gap: 20px;
+            z-index: 20;
         }
 
         button {
-            background: rgba(10, 5, 15, 0.85);
-            backdrop-filter: blur(4px);
-            border: 1.5px solid var(--gold);
+            background: rgba(20, 10, 25, 0.8);
+            border: 1px solid var(--gold);
             color: var(--gold);
-            padding: 12px 28px;
+            padding: 12px 25px;
             font-family: 'Cinzel Decorative', cursive;
-            font-size: 0.85rem;
-            font-weight: bold;
+            border-radius: 5px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            letter-spacing: 2.5px;
-            border-radius: 40px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-            position: relative;
-            overflow: hidden;
-        }
-
-        button::before {
-            content: "❦";
-            margin-right: 12px;
-            font-size: 1rem;
-            opacity: 0.8;
-        }
-
-        .veto-btn::before {
-            content: "✖";
-            margin-right: 8px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         button:hover {
-            transform: translateY(-2px);
             background: var(--gold);
-            color: #12071a;
-            box-shadow: 0 0 18px var(--gold-glow);
-            border-color: white;
+            color: var(--void);
+            box-shadow: 0 0 15px var(--gold);
         }
 
-        .veto-btn {
-            border-color: var(--blood);
-            color: #d68b8b;
-        }
-        .veto-btn:hover {
-            background: var(--blood-dark);
-            color: #ffcd94;
-            box-shadow: 0 0 20px var(--blood);
-            border-color: #e09d9d;
-        }
+        .veto-btn { border-color: var(--blood); color: var(--blood); }
+        .veto-btn:hover { background: var(--blood); color: white; }
 
-        /* ritual status message */
-        .ritual-message {
-            margin-top: 30px;
-            font-size: 0.75rem;
-            background: rgba(0,0,0,0.6);
-            padding: 5px 15px;
-            border-radius: 40px;
-            color: #c0b17a;
+        #ritual-msg {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #666;
+            font-style: italic;
             letter-spacing: 1px;
-            backdrop-filter: blur(4px);
-            font-family: monospace;
-            border-left: 2px solid var(--gold);
-            transition: opacity 0.2s;
-        }
-
-        /* responsive touch */
-        @media (max-width: 500px) {
-            #card-table { width: 290px; height: 440px; }
-            .card-back { font-size: 1rem; padding: 20px; }
-            .controls button { padding: 8px 18px; font-size: 0.7rem; }
-            h1 { font-size: 1.4rem; letter-spacing: 4px; }
-        }
-
-        /* additional accented rune */
-        .invisible-sigil {
-            position: absolute;
-            bottom: 10px;
-            right: 20px;
-            font-size: 12px;
-            opacity: 0.2;
-            font-family: monospace;
-            pointer-events: none;
         }
     </style>
 </head>
 <body>
-<div class="flicker-overlay"></div>
+    <div class="particles"></div>
+    <div class="flicker"></div>
 
-<h1>🜟 THE TOY'S RITUAL 🜟</h1>
-<div class="sub">✦ THE SHADOW GRIMOIRE ✦</div>
+    <h1>🜏 THE GRIMOIRE 🜏</h1>
+    <div class="sub">DECREES OF THE BOUND</div>
 
-<div id="card-table">
-    <div class="card" id="card">
-        <div class="card-face card-front">
-            <div class="seal-icon">⚯ 𑁍 𖤐</div>
-            <p style="font-size: 0.9rem;">⬩ SEAL OF OBEDIENCE ⬩</p>
-            <p style="font-size: 0.7rem; letter-spacing: 2px;">TOUCH / TAP TO UNVEIL</p>
+    <div id="card-table">
+        <div class="card" id="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-face card-front">
+                <div class="seal">⛧</div>
+                <p>REVEAL YOUR FATE</p>
+            </div>
+            <div class="card-face card-back" id="prompt-text">
+                Prepare your skin...
+            </div>
         </div>
-        <div class="card-face card-back" id="prompt-text">
-            The shadows whisper...
-        </div>
+        <div class="card-aura"></div>
     </div>
-</div>
 
-<div class="controls">
-    <button id="drawBtn" onclick="drawNew()">DRAW COMMAND</button>
-    <button id="vetoBtn" class="veto-btn" onclick="burnCard()">VETO</button>
-</div>
-<div id="ritualMsg" class="ritual-message">⚝ Awaiting the first decree ⚝</div>
-<div class="invisible-sigil">⎅ ⬩ ᛉ ᛗ ⬩ ⎅</div>
+    <div class="controls">
+        <button onclick="drawNew()">Draw Command</button>
+        <button class="veto-btn" onclick="veto()">Veto</button>
+    </div>
+    <div id="ritual-msg">Awaiting her will...</div>
 
-<script>
-    /* =========================================================
-       ———— ENRICHED COMMANDS: DARK & RITUALISTIC ————
-       Add more commands in this array following the pattern.
-       Each string holds a unique decree. 
-    ========================================================= */
-    const commands = [
-        "THE GRAVITY WELL: Secure weights to the sac. I must stand perfectly still for 3 minutes while they stretch. Any movement earns a squeeze.",
-        "THE CROW'S PINCH: Use your sharpest nails to find the skin between, pulling and pinching while I'm restricted.",
-        "THE WICKED TWIST: Slowly rotate the sac a full half-turn. Hold it there while you tell me exactly what I am.",
-        "THE CRUSHING DEPTHS: Place the sac between two flat surfaces (or your palms) and slowly lean your weight into them.",
-        "THE BOUND STRETCH: With my hands tied high, pull my stones toward the floor until I'm on my tiptoes.",
-        "THE BLOOD COIL: Use a thin lace or string to tie around the base, cinching it tight while you toy with the tops.",
-        "THE COLD DECREE: Apply ice until they are shrunken and tight, then use your warm mouth to bring the heat back.",
-        "THE MISTRESS'S CHOICE: You decide the tool, you decide the tension. No limit for 60 seconds.",
-        "❖ THE SILENT TRIAL: No words for 2 minutes. Every attempt to speak earns a sudden, sharp pressure to the root.",
-        "✧ THE SORROW'S HINGE: Fold the sac in half gently but firmly. Rock it side to side while reciting my submission.",
-        "☠ THE GILDED KNOT: Tie a silk cord around the whole package, tightening one notch each time I gasp.",
-        "⛧ THE INCUBUS WEIGHT: Lie flat on your back, have me straddle your hips. Shift your weight slowly onto the dangling flesh.",
-        "𐕣 THE RITUAL OF TWO PALMS: Cup them and slap upwards from below with rhythmic force, counting to thirteen.",
-        "🜏 THE MERCY THRESHOLD: Edge me with a flogger between my legs until I beg, then delay the strike for six heartbeats."
-    ];
+    <script>
+        /* =========================================================
+           CARDS DATA: Add or edit your commands here.
+           ========================================================= */
+        const commands = [
+            "THE GRAVITY WELL: Secure weights to the sac. I must stand perfectly still while they stretch. Any movement earns a squeeze.",
+            "THE CROW'S PINCH: Use your sharpest nails to find the skin between, pulling and pinching while I'm restricted.",
+            "THE WICKED TWIST: Slowly rotate the sac a full half-turn. Hold it there while you tell me exactly what I am.",
+            "THE CRUSHING DEPTHS: Place the sac between your palms and slowly lean your weight into them for a slow, agonizing squeeze.",
+            "THE BOUND STRETCH: With my hands tied high, pull my stones toward the floor until I'm on my tiptoes and gasping.",
+            "THE BLOOD COIL: Use a thin lace or string to tie around the base, cinching it tight while you toy with the tops.",
+            "THE COLD DECREE: Apply ice until they are shrunken and tight, then use your warm mouth to bring the heat back.",
+            "THE MISTRESS'S CHOICE: You decide the tool, you decide the tension. No limit for 60 seconds.",
+            "THE VELVET VETO: Squeeze firmly, but stroke the skin softly. A mix of pain and pleasure until I lose count.",
+            "THE PENDULUM: Pull them back and release them, letting them swing into your waiting palm with a sharp 'thud'."
+        ];
 
-    // DOM elements
-    const card = document.getElementById('card');
-    const textDisplay = document.getElementById('prompt-text');
-    const msgDiv = document.getElementById('ritualMsg');
-    
-    // Track ongoing animation to prevent accidental double drawing while burning
-    let isLocked = false;
-    let pendingFlip = false;
+        const card = document.getElementById('card');
+        const textDisplay = document.getElementById('prompt-text');
+        const ritualMsg = document.getElementById('ritual-msg');
 
-    // Helper to update message temporarily
-    function setRitualMessage(text, isError = false) {
-        msgDiv.style.opacity = '0';
-        setTimeout(() => {
-            msgDiv.innerHTML = isError ? `⚠️ ${text} ⚠️` : `🜟 ${text} 🜟`;
-            msgDiv.style.opacity = '1';
-        }, 50);
-        setTimeout(() => {
-            if (msgDiv.innerHTML !== '⚝ Awaiting the first decree ⚝') {
-                // but keep current msg for 2 secs then revert to subtle state
-                if (!isError) {
-                    setTimeout(() => {
-                        if (msgDiv.innerHTML !== '⚝ Awaiting the first decree ⚝' && !isLocked)
-                            msgDiv.innerHTML = '⚝ awaiting your will ⚝';
-                    }, 2000);
-                }
-            }
-        }, 100);
-    }
-
-    // Soundless immersive effect with pulse
-    function addDrawPulse() {
-        card.classList.add('draw-pulse');
-        setTimeout(() => {
-            card.classList.remove('draw-pulse');
-        }, 600);
-    }
-
-    // get fresh command (non-repetitive if possible but not needed)
-    let lastIndex = -1;
-    function getRandomCommand() {
-        let newIndex;
-        if (commands.length === 1) return commands[0];
-        do {
-            newIndex = Math.floor(Math.random() * commands.length);
-        } while (newIndex === lastIndex && commands.length > 1);
-        lastIndex = newIndex;
-        return commands[newIndex];
-    }
-
-    // Core draw function: resets state, flips card back, changes text, adds dramatic effects
-    function drawNew() {
-        if (isLocked) {
-            setRitualMessage("The grimoire resists... wait a moment", true);
-            return;
-        }
-        
-        // if currently flipped, we unflip first, then change text after transition
-        const wasFlipped = card.classList.contains('flipped');
-        
-        // if burning or in transition, avoid double
-        if (card.classList.contains('burn')) {
-            setRitualMessage("The ashes must settle before a new command.", true);
-            return;
-        }
-        
-        // Disable user click during draw transition but preserve logic
-        isLocked = true;
-        
-        // Remove any leftover burn class
-        card.classList.remove('burn');
-        
-        // If card is currently displaying a command (flipped), we unflip first
-        if (wasFlipped) {
-            card.classList.remove('flipped');
-            // wait for unflip animation (0.5s) before changing text and flipping again? 
-            // Better: after unflip fully, update front text? Actually text is on back, but it's hidden until next flip.
-            // So we wait for unflip transition then change text and flip again? 
-            // But typical UX: draw command resets card to front, then tap to reveal new. However original code did: unflip + change back text in timeout.
-            // We improve: draw command -> card snaps to front (unflipped), then the hidden back text is updated so next tap shows fresh content. But also automatically flip? My style: we keep ritual: draw means new sealed command. Display front, you tap to discover. I'll implement like an oracle: draws new command, resets to unflipped state, and optional pulse.
+        function drawNew() {
+            card.classList.remove('flipped', 'burn');
+            ritualMsg.innerText = "The shadows shift...";
+            
             setTimeout(() => {
-                // Now change the hidden text
-                const freshCmd = getRandomCommand();
-                textDisplay.innerText = freshCmd;
-                // Add some shadow flicker effect
-                addDrawPulse();
-                setRitualMessage(`New decree sealed: "${freshCmd.substring(0, 35)}..."`);
-                isLocked = false;
-            }, 380); // match transition duration
-        } else {
-            // Already unflipped (front visible). Update back text instantly, draw effect, remain unflipped
-            const freshCmd = getRandomCommand();
-            textDisplay.innerText = freshCmd;
-            addDrawPulse();
-            setRitualMessage(`Decree inscribed: "${freshCmd.substring(0, 38)}…"`);
-            isLocked = false;
+                const random = commands[Math.floor(Math.random() * commands.length)];
+                textDisplay.innerText = random;
+                ritualMsg.innerText = "A new decree is written.";
+            }, 300);
         }
-    }
 
-    // Enhanced Veto (burn) ritual
-    function burnCard() {
-        if (isLocked) {
-            setRitualMessage("The ritual energy is unstable, wait...", true);
-            return;
+        function veto() {
+            card.classList.add('burn');
+            ritualMsg.innerText = "The command is burned to ash...";
+            
+            setTimeout(() => {
+                drawNew();
+            }, 600);
         }
-        if (card.classList.contains('burn')) {
-            setRitualMessage("The card is already turning to ash.", true);
-            return;
-        }
-        // only if card exists
-        isLocked = true;
-        
-        // Add burn visual class
-        card.classList.add('burn');
-        
-        // optional: create thematic message
-        setRitualMessage("⛧ VETO! The command crumbles into shadow... ⛧");
-        
-        // after burn animation, we renew draw new command but with reset and no extra artifacts
-        setTimeout(() => {
-            // force reset burn class and unflip if necessary
-            card.classList.remove('burn', 'flipped');
-            // generate a new command but don't auto-flip
-            const newCmd = getRandomCommand();
-            textDisplay.innerText = newCmd;
-            // remove any hanging transforms
-            card.style.transform = '';
-            addDrawPulse();
-            setRitualMessage(`A new whisper arises: "${newCmd.substring(0, 35)}…"`);
-            isLocked = false;
-        }, 480);
-    }
-
-    // Manual flip with extra ambiance and allow flipping only if not in burn or locked
-    function handleCardTap(e) {
-        e.stopPropagation();
-        if (isLocked) {
-            setRitualMessage("The grimoire pages are still shifting...", true);
-            return;
-        }
-        if (card.classList.contains('burn')) {
-            setRitualMessage("The card is ash, draw a new command first.", true);
-            return;
-        }
-        // Toggle flip with smooth soundless effect
-        const willBeFlipped = !card.classList.contains('flipped');
-        card.classList.toggle('flipped');
-        
-        if (willBeFlipped) {
-            // when revealing (back side shows command)
-            setRitualMessage("✦ The words sear your eyes ✦", false);
-            // subtle gold spark effect by class (optional just message)
-        } else {
-            setRitualMessage("🜟 Seal returns. Await next will. 🜟");
-        }
-    }
-    
-    // Attach tap/click event on card (without interfering with buttons)
-    card.addEventListener('click', handleCardTap);
-    
-    // Preload first random command on load without auto-flipping, just to have first content
-    window.addEventListener('DOMContentLoaded', () => {
-        const initCmd = commands[Math.floor(Math.random() * commands.length)];
-        textDisplay.innerText = initCmd;
-        setRitualMessage("The Shadow Grimoire awakens. Tap the seal.", false);
-        // ensure card is front facing and no burn class
-        card.classList.remove('flipped', 'burn');
-        lastIndex = commands.indexOf(initCmd);
-        // Extra: add a subtle floating runes effect later
-    });
-    
-    // Bonus optional: disconnect double-reveal conflicts
-    // Ensure that if user clicks while flipping, it doesn't break
-    // also adding additional protection: prevent card flipping when veto animation
-    // all good!
-
-    // Additional custom style for audio/immersive - silent but lethal
-    // Prevents context menu on card for clean experience
-    card.addEventListener('contextmenu', (e) => e.preventDefault());
-    
-    // Ensure after window resize or orientation no glitch
-    window.addEventListener('orientationchange', () => {
-        setTimeout(() => {
-            if (card.classList.contains('burn')) {
-                // do nothing but ensure not stuck
-            }
-        }, 100);
-    });
-    
-    // For extra safety, reset lock if stuck (just in case)
-    setInterval(() => {
-        if (isLocked && !card.classList.contains('burn') && !card.classList.contains('flipped') && !document.querySelector('.draw-pulse')) {
-            // if lock longer than 2 seconds forced unlock (debug)
-            console.log("safety unlock");
-            isLocked = false;
-        }
-    }, 3000);
-</script>
+    </script>
 </body>
 </html>
