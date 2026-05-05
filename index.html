@@ -3,20 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Shadow Grimoire</title>
+    <title>The Grimoire</title>
     <style>
-        :root {
-            --bg-color: #0a0a0c;
-            --card-bg: #1a1625;
-            --accent: #b08d57; /* Antique Gold */
-            --text: #e0d8ef;
-            --witchy-purple: #4b2c5e;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=IM+Fell+English+SC&display=swap');
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text);
-            font-family: 'Georgia', serif;
+            background: radial-gradient(circle, #1a0b1a 0%, #050505 100%);
+            color: #d4af37;
+            font-family: 'IM Fell English SC', serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -24,112 +18,167 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
         }
 
-        #card-container {
-            width: 300px;
-            height: 450px;
-            perspective: 1000px;
-            cursor: pointer;
+        /* Flickering Candlelight Effect */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.2);
+            animation: flicker 4s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.1; } 5% { opacity: 0.3; } 10% { opacity: 0.1; } 
+            15% { opacity: 0.4; } 100% { opacity: 0.1; }
+        }
+
+        #card-table {
+            position: relative;
+            width: 320px;
+            height: 480px;
+            perspective: 1500px;
         }
 
         .card {
             width: 100%;
             height: 100%;
             position: relative;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             transform-style: preserve-3d;
-            border: 2px solid var(--accent);
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(75, 44, 94, 0.5);
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
         }
 
-        .card.is-flipped { transform: rotateY(180deg); }
+        .card.flipped { transform: rotateY(180deg); }
 
         .card-face {
             position: absolute;
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
+            border: 3px solid #4a3728;
+            border-radius: 10px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 30px;
             box-sizing: border-box;
-            text-align: center;
-            border-radius: 13px;
+            background: #121212;
+            box-shadow: 0 0 30px #000;
         }
 
+        /* The "Back" of the card (The Witchy Pattern) */
         .card-front {
-            background: linear-gradient(45deg, #1a1625, #2d1b36);
-            font-size: 5rem;
+            background-image: url('https://www.transparenttextures.com/patterns/dark-leather.png'), linear-gradient(135deg, #2b1a2b 0%, #1a0b1a 100%);
+            border-color: #d4af37;
         }
 
+        .seal {
+            font-size: 6rem;
+            filter: drop-shadow(0 0 15px #d4af37);
+        }
+
+        /* The "Front" of the card (The Instruction) */
         .card-back {
-            background: var(--card-bg);
+            background: #0f0c08;
             transform: rotateY(180deg);
-            font-size: 1.5rem;
-            border: 1px solid var(--witchy-purple);
+            border-color: #5e1d1d;
+            color: #e0d8ef;
+            font-size: 1.4rem;
+            line-height: 1.6;
+            box-shadow: inset 0 0 50px #000;
         }
 
-        .controls { margin-top: 30px; }
+        .controls {
+            margin-top: 40px;
+            display: flex;
+            gap: 20px;
+        }
 
         button {
-            background: transparent;
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 10px 20px;
-            font-size: 1rem;
+            background: #2b1a2b;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            padding: 12px 24px;
+            font-family: 'Cinzel Decorative', cursive;
             cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            transition: 0.5s;
+            z-index: 10;
         }
 
         button:hover {
-            background: var(--accent);
-            color: var(--bg-color);
+            background: #d4af37;
+            color: #1a0b1a;
+            box-shadow: 0 0 20px #d4af37;
         }
+
+        .veto-btn { border-color: #7a1a1a; color: #7a1a1a; }
+        .veto-btn:hover { background: #7a1a1a; color: #fff; }
     </style>
 </head>
 <body>
 
-    <div id="card-container">
-        <div class="card" id="card">
-            <div class="card-face card-front">🌙</div>
-            <div class="card-back" id="card-text">Tap to draw your fate...</div>
+    <h1 style="font-family: 'Cinzel Decorative'; letter-spacing: 5px;">The Toy's Decree</h1>
+
+    <div id="card-table">
+        <div class="card" id="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-face card-front">
+                <div class="seal">⛧</div>
+                <p>Reveal Your Fate</p>
+            </div>
+            <div class="card-face card-back" id="prompt-text">
+                Prepare yourself...
+            </div>
         </div>
     </div>
 
     <div class="controls">
-        <button onclick="drawCard()">Draw a Prompt</button>
+        <button onclick="newPrompt()">Draw Command</button>
+        <button class="veto-btn" onclick="veto()">Reject (Veto)</button>
     </div>
 
     <script>
-        const prompts = [
-            "The Heavy Weight: Secure a weight or clamp to the sac and let gravity do the work while I stay still.",
-            "The Kneeling Stretch: Pull them back between my legs while I am bound, making me beg for the release.",
-            "The Velvet Crush: Use your palms to slowly increase pressure until I hit my limit.",
-            "Witch's Grip: Use cold rings or silk to twist and isolate while whispering what I am to you.",
-            "The Pendulum: Swing and flick with rhythm, increasing intensity with every count of ten.",
-            "The Shadow Bind: Use twine to create a 'harness' for them, cinching tighter when I speak out of turn."
+        const commands = [
+            "THE WEIGHT OF SIN: Use clamps or a leather strap to hang a heavy weight from the sac. Leave me to dangle while you watch.",
+            "THE DEVIL'S GRIP: Squeeze firmly with both hands, slowly increasing pressure until I beg, then maintain it for 30 seconds.",
+            "STRETCHED ON THE RACK: Pull the sac down toward the floor while I am bound upright, ensuring my skin is taut and vulnerable.",
+            "THE TWISTED WITCH: Take the sac and slowly twist 180 degrees. Hold it. Whisper what happens if I move.",
+            "THE VELVET FLOG: Use a soft leather flogger or cloth to strike the sensitive skin underneath while they are pulled tight.",
+            "ISOLATION: Use a ring or your fingers to isolate just one, stretching it away from the body to be toyed with alone.",
+            "ICE & FIRE: Rub an ice cube over the stretched skin, followed immediately by a warm breath or candle wax."
         ];
 
-        const card = document.getElementById('card');
-        const cardText = document.getElementById('card-text');
-
-        function drawCard() {
-            // Reset flip first
-            card.classList.remove('is-flipped');
+        function newPrompt() {
+            const card = document.getElementById('card');
+            card.classList.remove('flipped'); // Reset flip
             
             setTimeout(() => {
-                const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
-                cardText.innerText = randomPrompt;
-                card.classList.add('is-flipped');
-            }, 100);
+                const random = commands[Math.floor(Math.random() * commands.length)];
+                document.getElementById('prompt-text').innerText = random;
+            }, 300);
         }
 
-        card.addEventListener('click', () => card.classList.toggle('is-flipped'));
+        function veto() {
+            const card = document.getElementById('card');
+            card.style.animation = "shake 0.5s ease";
+            setTimeout(() => {
+                card.style.animation = "";
+                newPrompt();
+            }, 500);
+        }
     </script>
+
+    <style>
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px) rotate(-5deg); }
+            50% { transform: translateX(10px) rotate(5deg); }
+            100% { transform: translateX(0); }
+        }
+    </style>
 </body>
 </html>
