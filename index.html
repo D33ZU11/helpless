@@ -33,16 +33,16 @@
 
         .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; border: 2px solid var(--gold); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; box-shadow: 0 15px 50px rgba(0,0,0,0.8); text-align: center; }
         .card-front { background: #0c0810; background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png'); }
-        .card-back { background: linear-gradient(135deg, #120a16 0%, #050505 100%); transform: rotateY(180deg); color: var(--parchment); font-size: 1.1rem; overflow-y: auto; }
+        .card-back { background: linear-gradient(135deg, #120a16 0%, #050505 100%); transform: rotateY(180deg); color: var(--parchment); font-size: 1.1rem; overflow-y: auto; display: flex; align-items: center; justify-content: center; }
 
         .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 320px; z-index: 20; padding: 10px; }
-        button { background: rgba(20, 10, 25, 0.8); border: 1px solid var(--gold); color: var(--gold); padding: 8px; font-family: 'Cinzel Decorative', cursive; border-radius: 5px; cursor: pointer; font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase; }
+        button { background: rgba(20, 10, 25, 0.8); border: 1px solid var(--gold); color: var(--gold); padding: 12px 8px; font-family: 'Cinzel Decorative', cursive; border-radius: 5px; cursor: pointer; font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; }
         button:hover { background: var(--gold); color: var(--void); }
         
         .btn-abyss { border-color: #ff4444; color: #ff4444; }
         .btn-special { border-color: #9370db; color: #9370db; }
         .btn-end { border-color: #fff; background: rgba(60,0,0,0.4); }
-        .btn-veto { grid-column: span 2; border-color: var(--blood); }
+        .btn-disposal { border-color: #e4c580; background: rgba(40, 30, 10, 0.6); grid-column: span 2; }
 
         #confirm-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         #confirm-overlay img { width: 120px; border-radius: 50%; border: 2px solid var(--gold); margin-bottom: 15px; }
@@ -54,7 +54,7 @@
     <div id="confirm-overlay">
         <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=evil-laugh&backgroundColor=03000a" alt="Grin">
         <h2 style="font-family: 'Cinzel Decorative'; color: var(--gold);">Proceed, Mistress?</h2>
-        <p style="color: #888; padding: 0 20px;">The toy is ready for his undoing.</p>
+        <p style="color: #888; padding: 0 20px;">The ritual demands total surrender.</p>
         <button onclick="confirmRitual(true)" style="padding: 10px 20px; font-size: 1rem; margin-bottom: 10px;">Seal the Pact</button>
         <button onclick="confirmRitual(false)" style="border-color: #444; color: #444;">Not yet</button>
     </div>
@@ -70,26 +70,62 @@
 
     <div class="controls-grid">
         <button onclick="drawNew('standard')">Standard</button>
-        <button onclick="requestRitual('giggles')" class="btn-special">For Giggles</button>
-        <button onclick="requestRitual('humiliation')" class="btn-abyss">Humiliation</button>
         <button onclick="requestRitual('tithe')" class="btn-special">Queen's Tithe</button>
         <button onclick="requestRitual('abyss')" class="btn-abyss">The Abyss</button>
-        <button onclick="requestRitual('sanctuary')" class="btn-special">Sanctuary</button>
         <button onclick="requestRitual('finish')" class="btn-end">Finish Him</button>
-        <button onclick="requestRitual('disposal')" class="btn-end">Disposal</button>
-        <button class="btn-veto" onclick="veto()">Veto Command</button>
+        <button onclick="requestRitual('disposal')" class="btn-disposal">The Disposal (Cherished)</button>
+        <button onclick="requestRitual('sanctuary')" class="btn-special" style="grid-column: span 2;">Sanctuary</button>
     </div>
 
     <script>
         const decks = {
-            standard: ["THE GRAVITY WELL: Weights to the sac. Stand still. Any movement = squeeze.", "THE CROW'S PINCH: Sharp nails to find the skin between. Pull and pinch.", "THE WICKED TWIST: Rotate sac half-turn. Hold and confess your status.", "THE CRUSHING DEPTHS: Sac between palms. Lean in for slow agony.", "THE PENDULUM: Pull and release into palm with a sharp thud."],
-            abyss: ["THE TOY’S PILGRIMAGE: Cord from sac to ankles. Walk and pull your own skin taut.", "THE DESCENT OF THE BLACK SUN: Heavy weight swing. If I flinch, deliver a brutal squeeze.", "THE WITCH’S VICE: Twist until white. Zip-tie and leave me while you ignore my groans.", "THE MARK OF CANAAN: Trace symbols with a cold blade. Gasping = 10s squeeze.", "THE HELPLESS RECKONING: Use feet to roll and squish them under your heel. I am your footstool."],
-            giggles: ["THE JINGLING PRISON: Bell tied to sac. Every jingle = 'Thank you Mistress'.", "THE WADDLING PEASANT: Heavy weights. Fetch her a 'tribute' by waddling clumsily.", "THE CAPTIVE CHORUS: Groans forbidden. Must 'beep' or make silly sounds instead.", "THE DECORATED TOY: Use markers/stickers to 'decorate' the sac while stretched. Stay still."],
-            humiliation: ["THE PETTY EXHIBITION: Spotlight on the sac. Mock the size and desperation of the 'package'.", "THE BEGGAR'S OATH: Edge me with one finger while I recite why you are better than me.", "THE SILK MUZZLE: Throb in the sac while tasting a worn stocking tied in my mouth.", "THE TOY’S INVENTORY: Measure the stretch with a ruler and mock the results aloud."],
-            tithe: ["THE ALTAR OF THE FOOT: Legs untied, hands bound. Massage her feet using only my face/neck.", "THE BOUND CONDUIT: I am your tool for pleasure. Total silence or punishment squeeze.", "THE TETHERED VALET: Untie for a task, but leash the sac to her wrist. Don't be slow.", "THE QUEEN'S SPOIL: Untied for service but must remain 'marked' with a heavy clamp."],
-            finish: ["THE SHATTERED PRAYER: Edge to the limit, then a crushing squeeze and walk away. Leave me ruined.", "THE FORCED OVERFLOW: Release granted, but only during a heavy, painful stretch.", "THE TOY’S BANKRUPTCY: Edge until sobbing, then use ice to kill it. No release today.", "THE ACCIDENTAL DEBT: Release without permission? Session resets with double weight."],
-            disposal: ["THE SEAL OF SILENCE: Smeared across my lips. Taste the surrender until she allows cleanup.", "THE LAPPING HOUND: Crawl and clean every trace from her skin/floor using only my tongue.", "THE TROPHY COLLAR: Wipe onto a scarf and tie it around my neck. Wear it all night.", "THE WITCH’S DRAIN: Watch her discard the offering down the drain like waste."],
-            sanctuary: ["THE HEALER’S HANDS: Release bindings. Cradle in warm palms with soft strokes.", "THE ANOINTING: Massage with warm oil. 'You did so well for me.'", "THE BREATH OF LIFE: Head on chest; breathe in unison for 60s.", "THE COVEN’S REST: No more commands. Just water and a soft touch on the cheek."]
+            standard: [
+                "THE GRAVITY WELL: Secure weights to the sac. Stand perfectly still for 3 minutes. Any movement earns a squeeze.",
+                "THE CROW'S PINCH: Use sharp nails to find the skin between, pulling and pinching while I am restricted.",
+                "THE WICKED TWIST: Rotate the sac a full half-turn. Hold it while you tell me exactly what I am.",
+                "THE CRUSHING DEPTHS: Place the sac between your palms and slowly lean your weight into them.",
+                "THE BLOOD COIL: Tie thin lace or string around the base, cinching it tight while you toy with the tops.",
+                "THE COLD DECREE: Apply ice until they are shrunken and tight, then use your warm mouth to bring heat back.",
+                "THE MISTRESS'S CHOICE: You decide the tool and the tension. No limit for 60 seconds.",
+                "THE SILENT TRIAL: No words for 2 minutes. Every attempt to speak earns sudden, sharp pressure.",
+                "THE SORROW'S HINGE: Fold the sac gently but firmly. Rock it side to side while reciting my submission.",
+                "THE GILDED KNOT: Tie a silk cord around the package, tightening one notch each time I gasp.",
+                "THE RITUAL OF TWO PALMS: Cup them and slap upwards from below with rhythmic force, counting to thirteen.",
+                "THE MERCY THRESHOLD: Edge me with a flogger until I beg, then delay the strike for six heartbeats."
+            ],
+            abyss: [
+                "THE IRON GALLOWS: Weights attached. Stand on tiptoes. Every time heels touch the floor, deliver a brutal squeeze.",
+                "THE SILENT ANCHOR: Heavy clamp applied. Ignored for 10 minutes while kneeling. Any sound resets the timer.",
+                "THE WEAVER’S NEEDLE: Pin-tool tracing the seams. Agonizingly light pressure followed by a violent pinch.",
+                "THE GRAVITY CRUSH: Lay flat. Use your full weight to step on the sac, increasing pressure until I beg.",
+                "STRETCHED ON THE RACK: Pull the sac toward the floor while I am bound upright, ensuring skin is taut and vulnerable.",
+                "THE INCUBUS WEIGHT: I lie flat; you straddle my hips. Shift your weight slowly onto the dangling flesh."
+            ],
+            tithe: [
+                "THE HUMAN FOOTREST: Legs spread and sac weighted. Support her feet while she rests. Wobbling earns a heel grind.",
+                "THE ROYAL CLEANSE: Use your tongue to clean her shoes/feet while the sac is stretched back between your legs.",
+                "THE BREATH COLLECTOR: No air allowed until she finishes a task. Your discomfort is her background music.",
+                "THE MARKET PRICE: She labels you with a marker—writing 'TRASH' across the skin while it is stretched taut."
+            ],
+            finish: [
+                "THE RUINED OFFERING: Edge to the absolute brink—then a crushing squeeze and a cold ice cube. No release.",
+                "THE BROKEN PRAYER: Release granted only while being painfully twisted. Thank her for the pain while you climax.",
+                "THE DEBT COLLECTOR: If he releases early, spend the next hour in heavy clamps while being ignored."
+            ],
+            disposal: [
+                "FOR HER: THE CLAY MASK. Applied to her face and lips. She wears it as a silent, cherished statue.",
+                "FOR HER: THE GILDED COLLAR. Poured over her neck and chest. A permanent mark of the night’s love.",
+                "FOR HIM: THE BITTER SWALLOW. She takes it all while maintaining eye contact. Total consumption and surrender.",
+                "FOR HIM: THE RECLAMATION. She gathers the offering from her skin and feeds it back to you. Shared intimacy.",
+                "FOR BOTH: THE PRESS. Bodies crushed together until you are both coated and bound by the mess.",
+                "FOR BOTH: THE SILK WIPE. She uses her hair or her clothes to clean you, marking them with the offering."
+            ],
+            sanctuary: [
+                "THE HEALER’S HANDS: Release all bindings. Cradle in warm palms with soft, loving strokes.",
+                "THE ANOINTING: Massage with warm oil. 'You did so well for me.'",
+                "THE BREATH OF LIFE: Head on chest; breathe in unison for 60 seconds of peace.",
+                "THE COVEN’S REST: No more commands. Just water and a soft touch on the cheek."
+            ]
         };
 
         let activeMode = 'standard';
