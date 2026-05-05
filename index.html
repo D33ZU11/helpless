@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Shadow Grimoire</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0c;
+            --card-bg: #1a1625;
+            --accent: #b08d57; /* Antique Gold */
+            --text: #e0d8ef;
+            --witchy-purple: #4b2c5e;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            font-family: 'Georgia', serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #card-container {
+            width: 300px;
+            height: 450px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            border: 2px solid var(--accent);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(75, 44, 94, 0.5);
+        }
+
+        .card.is-flipped { transform: rotateY(180deg); }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            border-radius: 13px;
+        }
+
+        .card-front {
+            background: linear-gradient(45deg, #1a1625, #2d1b36);
+            font-size: 5rem;
+        }
+
+        .card-back {
+            background: var(--card-bg);
+            transform: rotateY(180deg);
+            font-size: 1.5rem;
+            border: 1px solid var(--witchy-purple);
+        }
+
+        .controls { margin-top: 30px; }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        button:hover {
+            background: var(--accent);
+            color: var(--bg-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="card-container">
+        <div class="card" id="card">
+            <div class="card-face card-front">🌙</div>
+            <div class="card-back" id="card-text">Tap to draw your fate...</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button onclick="drawCard()">Draw a Prompt</button>
+    </div>
+
+    <script>
+        const prompts = [
+            "The Heavy Weight: Secure a weight or clamp to the sac and let gravity do the work while I stay still.",
+            "The Kneeling Stretch: Pull them back between my legs while I am bound, making me beg for the release.",
+            "The Velvet Crush: Use your palms to slowly increase pressure until I hit my limit.",
+            "Witch's Grip: Use cold rings or silk to twist and isolate while whispering what I am to you.",
+            "The Pendulum: Swing and flick with rhythm, increasing intensity with every count of ten.",
+            "The Shadow Bind: Use twine to create a 'harness' for them, cinching tighter when I speak out of turn."
+        ];
+
+        const card = document.getElementById('card');
+        const cardText = document.getElementById('card-text');
+
+        function drawCard() {
+            // Reset flip first
+            card.classList.remove('is-flipped');
+            
+            setTimeout(() => {
+                const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+                cardText.innerText = randomPrompt;
+                card.classList.add('is-flipped');
+            }, 100);
+        }
+
+        card.addEventListener('click', () => card.classList.toggle('is-flipped'));
+    </script>
+</body>
+</html>
