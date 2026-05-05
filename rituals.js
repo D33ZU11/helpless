@@ -30,3 +30,4 @@ export const RitualDecks = {
         "THE MOON SALVE: Cooling balm is applied to your tenderized parts. You will remain in this state of recovery until she decides you are ready to be broken again."
     ]
 };
+
