@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>The Shadow Grimoire | Ritual of the Toy</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=IM+Fell+English+SC&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
+    <title>The Shadow Grimoire | Complete Ritual</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
     <style>
         * { user-select: none; -webkit-tap-highlight-color: transparent; }
-
         :root {
             --gold: #e4c580;
             --gold-glow: #ffdd99;
@@ -15,313 +14,181 @@
             --void: #03000a;
             --purple-haze: #1a0b1c;
             --parchment: #f2e9d0;
-            --sanctuary-blue: #4b3d61;
+            --abyss-red: #ff0000;
+            --sanctuary-blue: #9370db;
+            --tithe-green: #4db179;
         }
 
         body {
             background: radial-gradient(circle at center, var(--purple-haze) 0%, var(--void) 100%);
             color: var(--gold);
             font-family: 'IM Fell English SC', serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            perspective: 1000px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; margin: 0; overflow: hidden; perspective: 1000px;
         }
 
-        .particles {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            background-image: radial-gradient(circle, var(--gold) 1px, transparent 1px);
-            background-size: 50px 50px;
-            opacity: 0.1;
-            animation: moveParticles 20s linear infinite;
-        }
+        /* Ambiance */
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background-image: radial-gradient(circle, var(--gold) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.1; animation: moveParticles 20s linear infinite; }
+        @keyframes moveParticles { from { background-position: 0 0; } to { background-position: 500px 1000px; } }
+        .flicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.1); animation: candleFlicker 3s infinite; pointer-events: none; z-index: 5; }
+        @keyframes candleFlicker { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.05; } }
 
-        @keyframes moveParticles {
-            from { background-position: 0 0; }
-            to { background-position: 500px 1000px; }
-        }
+        h1 { font-family: 'Cinzel Decorative', cursive; font-size: 1.5rem; letter-spacing: 4px; text-align: center; margin: 10px 0; background: linear-gradient(to bottom, var(--gold), #856d3c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .flicker {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.1);
-            animation: candleFlicker 3s infinite;
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        @keyframes candleFlicker {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 0.05; }
-            70% { opacity: 0.15; }
-        }
-
-        h1 {
-            font-family: 'Cinzel Decorative', cursive;
-            font-size: 1.8rem;
-            letter-spacing: 6px;
-            background: linear-gradient(to bottom, var(--gold), #856d3c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 5px;
-            filter: drop-shadow(0 0 5px rgba(228, 197, 128, 0.3));
-        }
-
-        .sub {
-            font-size: 0.7rem;
-            letter-spacing: 4px;
-            color: #7a6a4a;
-            margin-bottom: 25px;
-        }
-
-        #card-table {
-            position: relative;
-            width: 320px;
-            height: 480px;
-            z-index: 10;
-        }
-
-        .card-aura {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 120%; height: 120%;
-            background: radial-gradient(circle, rgba(139, 42, 42, 0.4) 0%, transparent 70%);
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: opacity 0.8s, background 0.8s;
-            pointer-events: none;
-        }
-
-        .card.flipped ~ .card-aura { opacity: 1; animation: pulseAura 2s infinite; }
-        
-        /* Aura Colors based on mode */
-        .aura-abyss { background: radial-gradient(circle, rgba(255, 0, 0, 0.4) 0%, transparent 70%); }
-        .aura-sanctuary { background: radial-gradient(circle, rgba(147, 112, 219, 0.4) 0%, transparent 70%); }
-
-        @keyframes pulseAura {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.1); }
-        }
-
-        .card {
-            width: 100%; height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border-radius: 20px;
-        }
-
+        /* Card Setup */
+        #card-table { position: relative; width: 300px; height: 420px; z-index: 10; margin: 10px 0; }
+        .card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 20px; cursor: pointer;}
         .card.flipped { transform: rotateY(180deg) rotateZ(-2deg); }
-        
         .card.burn { animation: burnAway 0.6s forwards; }
+        @keyframes burnAway { 0% { transform: scale(1); } 50% { transform: scale(1.1); filter: brightness(3) sepia(1); } 100% { transform: scale(0); opacity: 0; } }
 
-        @keyframes burnAway {
-            0% { transform: scale(1); filter: brightness(1) sepia(0); }
-            50% { transform: scale(1.1) rotate(5deg); filter: brightness(2) sepia(1) hue-rotate(-50deg); }
-            100% { transform: scale(0); opacity: 0; filter: brightness(5); }
-        }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; border: 2px solid var(--gold); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px; box-sizing: border-box; box-shadow: 0 15px 50px rgba(0,0,0,0.8); text-align: center; }
+        .card-front { background: #0c0810; background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png'); }
+        .card-back { background: linear-gradient(135deg, #120a16 0%, #050505 100%); transform: rotateY(180deg); color: var(--parchment); font-size: 1.2rem; overflow-y: auto; }
 
-        .card-face {
-            position: absolute;
-            width: 100%; height: 100%;
-            backface-visibility: hidden;
-            border-radius: 20px;
-            border: 2px solid var(--gold);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 30px;
-            box-sizing: border-box;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.8);
-        }
+        /* Aura Effects */
+        .card-aura { position: absolute; top: 50%; left: 50%; width: 120%; height: 120%; transform: translate(-50%, -50%); opacity: 0; transition: 0.8s; pointer-events: none; border-radius: 50%; filter: blur(20px); }
+        .card.flipped ~ .card-aura { opacity: 0.6; animation: pulseAura 2s infinite; }
+        @keyframes pulseAura { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.1); } }
 
-        .card-front {
-            background: #0c0810;
-            background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png');
-        }
-
-        .card-back {
-            background: linear-gradient(135deg, #120a16 0%, #050505 100%);
-            transform: rotateY(180deg);
-            color: var(--parchment);
-            font-size: 1.3rem;
-            text-align: center;
-            border-color: var(--blood);
-            box-shadow: inset 0 0 40px rgba(139, 42, 42, 0.2);
-            overflow-y: auto;
-        }
-
-        /* Specific border colors for back of card modes */
-        .mode-abyss { border-color: #ff0000; box-shadow: inset 0 0 40px rgba(255, 0, 0, 0.3); }
-        .mode-sanctuary { border-color: #9370db; box-shadow: inset 0 0 40px rgba(147, 112, 219, 0.3); }
-
-        .seal {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            color: var(--gold);
-            text-shadow: 0 0 20px var(--gold);
-        }
-
-        .controls {
-            margin-top: 30px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            z-index: 20;
-            width: 320px;
-        }
-
-        button {
-            background: rgba(20, 10, 25, 0.8);
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 10px;
-            font-family: 'Cinzel Decorative', cursive;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.7rem;
-        }
-
-        button:hover {
-            background: var(--gold);
-            color: var(--void);
-            box-shadow: 0 0 15px var(--gold);
-        }
-
-        .veto-btn { border-color: var(--blood); color: var(--blood); grid-column: span 2; }
-        .veto-btn:hover { background: var(--blood); color: white; }
+        /* Controls */
+        .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 320px; z-index: 20; padding: 10px; }
+        button { background: rgba(20, 10, 25, 0.8); border: 1px solid var(--gold); color: var(--gold); padding: 8px; font-family: 'Cinzel Decorative', cursive; border-radius: 5px; cursor: pointer; transition: 0.3s; font-size: 0.65rem; letter-spacing: 1px; }
+        button:hover { background: var(--gold); color: var(--void); box-shadow: 0 0 10px var(--gold); }
         
-        .abyss-btn { border-color: #ff4444; color: #ff4444; }
-        .sanctuary-btn { border-color: #9370db; color: #9370db; }
+        .btn-abyss { border-color: var(--abyss-red); color: var(--abyss-red); }
+        .btn-sanctuary { border-color: var(--sanctuary-blue); color: var(--sanctuary-blue); }
+        .btn-tithe { border-color: var(--tithe-green); color: var(--tithe-green); }
+        .btn-end { border-color: #fff; color: #fff; background: rgba(60,0,0,0.5); }
+        .btn-veto { grid-column: span 2; border-color: var(--blood); color: var(--blood); }
 
-        #ritual-msg {
-            margin-top: 15px;
-            font-size: 0.75rem;
-            color: #888;
-            font-style: italic;
-            text-align: center;
-            max-width: 80%;
-        }
+        /* Confirmation Overlay */
+        #confirm-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        #confirm-overlay img { width: 150px; height: 150px; border-radius: 50%; border: 2px solid var(--gold); margin-bottom: 20px; filter: drop-shadow(0 0 15px var(--blood)); }
+        #confirm-overlay h2 { font-family: 'Cinzel Decorative'; color: var(--gold); margin-bottom: 20px; }
+
+        #ritual-msg { margin-top: 10px; font-size: 0.7rem; color: #666; font-style: italic; }
     </style>
 </head>
 <body>
     <div class="particles"></div>
     <div class="flicker"></div>
 
-    <h1>🜏 THE GRIMOIRE 🜏</h1>
-    <div class="sub">DECREES OF THE BOUND</div>
+    <div id="confirm-overlay">
+        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=laughing-demon&backgroundColor=03000a" alt="Evil Grin">
+        <h2>Seal the Dark Pact?</h2>
+        <p style="color: #888; margin-bottom: 20px; padding: 0 20px;">Are you sure you want to go further? <br>She is waiting...</p>
+        <div>
+            <button onclick="confirmRitual(true)" style="padding: 15px 30px; font-size: 1rem;">Yes, Mistress</button>
+            <button onclick="confirmRitual(false)" style="border-color: #666; color: #666;">Not Yet</button>
+        </div>
+    </div>
+
+    <h1>🜏 THE SHADOW GRIMOIRE 🜏</h1>
+    <div class="sub" style="font-size: 0.6rem; letter-spacing: 3px; color: #555;">BEYOND THE BOUNDARY</div>
 
     <div id="card-table">
         <div class="card" id="card" onclick="this.classList.toggle('flipped')">
             <div class="card-face card-front">
-                <div class="seal">⛧</div>
-                <p>REVEAL YOUR FATE</p>
+                <div style="font-size: 4rem;">𖤐</div>
+                <p>TOUCH TO UNVEIL</p>
             </div>
             <div class="card-face card-back" id="prompt-text">
-                Prepare your skin...
+                The ritual awaits...
             </div>
         </div>
         <div id="aura" class="card-aura"></div>
     </div>
 
-    <div class="controls">
+    <div class="controls-grid">
         <button onclick="drawNew('standard')">Standard</button>
-        <button onclick="drawNew('abyss')" class="abyss-btn">The Abyss</button>
-        <button onclick="drawNew('sanctuary')" class="sanctuary-btn">Sanctuary</button>
-        <button class="veto-btn" onclick="veto()">Veto Command</button>
+        <button onclick="requestRitual('tithe')" class="btn-tithe">Queen's Tithe</button>
+        <button onclick="requestRitual('abyss')" class="btn-abyss">The Abyss</button>
+        <button onclick="requestRitual('sanctuary')" class="btn-sanctuary">Sanctuary</button>
+        <button onclick="requestRitual('finish')" class="btn-end">Finish Him</button>
+        <button onclick="requestRitual('disposal')" class="btn-end">Disposal</button>
+        <button class="btn-veto" onclick="veto()">Veto Command</button>
     </div>
-    <div id="ritual-msg">Awaiting her will...</div>
+
+    <div id="ritual-msg">Ready for your obedience.</div>
 
     <script>
-        const commands = [
-            "THE GRAVITY WELL: Secure weights to the sac. I must stand perfectly still while they stretch. Any movement earns a squeeze.",
-            "THE CROW'S PINCH: Use your sharpest nails to find the skin between, pulling and pinching while I'm restricted.",
-            "THE WICKED TWIST: Slowly rotate the sac a full half-turn. Hold it there while you tell me exactly what I am.",
-            "THE CRUSHING DEPTHS: Place the sac between your palms and slowly lean your weight into them for a slow, agonizing squeeze.",
-            "THE BOUND STRETCH: With my hands tied high, pull my stones toward the floor until I'm on my tiptoes and gasping.",
-            "THE BLOOD COIL: Use a thin lace or string to tie around the base, cinching it tight while you toy with the tops.",
-            "THE COLD DECREE: Apply ice until they are shrunken and tight, then use your warm mouth to bring the heat back.",
-            "THE MISTRESS'S CHOICE: You decide the tool, you decide the tension. No limit for 60 seconds.",
-            "THE VELVET VETO: Squeeze firmly, but stroke the skin softly. A mix of pain and pleasure until I lose count.",
-            "THE PENDULUM: Pull them back and release them, letting them swing into your waiting palm with a sharp 'thud'."
-        ];
+        const decks = {
+            standard: [
+                "THE GRAVITY WELL: Secure weights to the sac. I must stand still while they stretch. Any movement earns a squeeze.",
+                "THE CROW'S PINCH: Use nails to find the skin between, pulling and pinching while I'm restricted.",
+                "THE WICKED TWIST: Rotate the sac a full half-turn. Hold it while you tell me what I am.",
+                "THE CRUSHING DEPTHS: Place sac between palms and lean weight in for a slow, agonizing squeeze.",
+                "THE PENDULUM: Pull them back and release into your waiting palm with a sharp 'thud'."
+            ],
+            abyss: [
+                "THE TOY’S PILGRIMAGE: Tie a cord from sac to ankles. Force me to 'walk' so I pull my own skin taut. You enjoy the struggle.",
+                "THE DESCENT OF THE BLACK SUN: Swing a heavy weight from the sac. If I flinch from the jerk, deliver a brutal squeeze.",
+                "THE WITCH’S VICE: Twist the sac until white. Zip-tie it and leave me while you ignore my groans.",
+                "THE MARK OF CANAAN: Trace symbols on stretched skin with a cold blade. Every gasp earns a 10-second squeeze.",
+                "THE HELPLESS RECKONING: Use your feet to roll and squish them under your heel. I am your footstool."
+            ],
+            sanctuary: [
+                "THE HEALER’S HANDS: Release bindings slowly. Cradle the skin in warm palms with soft strokes. I am yours again.",
+                "THE ANOINTING: Massage stretched areas with warm oil. Tell me you’re proud of how I handled the darkness.",
+                "THE BREATH OF LIFE: Lay your head on my chest; breathe in unison for 60 seconds. Just two hearts beating.",
+                "THE COVEN’S REST: Grimoire closed. Bring me water. No more commands, just a soft touch on my cheek."
+            ],
+            tithe: [
+                "THE HUMAN PEDESTAL: Untie my legs, keep hands bound. I am your chair/footstool. If I move, the ritual resets.",
+                "THE CAPTIVE’S TONGUE: Position me so I can reach you, hands bound. I serve until you are satisfied or I am punished.",
+                "THE SILENT VALET: Untie me only to perform a task (feet/hair/drink) in total silence, then return to my bindings.",
+                "THE PITIFUL MIRROR: Hold a mirror while you touch yourself. I am forced to watch your pleasure while in tension."
+            ],
+            finish: [
+                "THE RUINED ALTAR: Edge me to the limit, then stop and walk away. I stay 'ruined' until you say otherwise.",
+                "THE OVERFLOW: Release is allowed, but only while you maintain a painful, heavy stretch. Fight through it.",
+                "THE FORCED LEAK: Edge me until I sob. Release is allowed in a humiliating position where I cannot touch myself.",
+                "THE SHATTERED TOY: Total denial. Use ice and pressure to kill the excitement. The game ends with me cold and frustrated."
+            ],
+            disposal: [
+                "THE MARK OF THE BEAST: Smear the 'white stuff' across my face/chest. I must wear it until it dries as a sign of surrender.",
+                "THE CLEANUP DUTY: Untie me only to clean your skin or the floor using only my tongue. Every drop is yours.",
+                "THE WITCH'S OFFERING: It is collected in a glass. You decide if I consume my failure or if you discard it like trash.",
+                "THE VANISHING ACT: Wipe it away with a silk cloth, then tie that cloth around my neck as a scent-collar."
+            ]
+        };
 
-        const abyssCommands = [
-            "THE TOY’S PILGRIMAGE: While I am bound, tie a cord from the sac to my ankles. Force me to 'walk' so I pull my own skin taut. You watch and laugh as I find no comfort.",
-            "THE DESCENT OF THE BLACK SUN: Secure a heavy weight. Stand over me and swing it like a pendulum. If I flinch from the jerking pull, deliver a sharp, brutal squeeze.",
-            "THE TONGUE-TIED SACRIFICE: While at my absolute limit of a stretch, I must explain in detail why a pathetic toy like me deserves this. Increase tension if I falter.",
-            "THE WITCH’S VICE: Twist the sac until the skin is white. Secure it with a tight cord and leave me while you go about your business, mocking my groans.",
-            "THE MARK OF CANAAN: Trace ritual symbols on my stretched skin with a cold, sharp object. Every gasp earns a squeeze lasting ten of your slowest heartbeats.",
-            "THE HELPLESS RECKONING: Use your feet to explore the sac, rolling and squishing them under your heel as you please. I am your footstool; provide you with a satisfying crunch."
-        ];
-
-        const sanctuaryCommands = [
-            "THE HEALER’S HANDS: Release my bindings with slow care. Cradle the skin in your warm palms with soft strokes and soothing words. I am your partner again.",
-            "THE ANOINTING: Use warm oil to massage the areas that were stretched. Look into my eyes and tell me you’re proud of how I handled the darkness.",
-            "THE BREATH OF LIFE: Lay your head on my chest and breathe in unison for sixty seconds. No toys, no power. Just two hearts beating together.",
-            "THE MANTLE OF PROTECTION: Wrap me in a blanket or your arms. Whisper our favorite memories, reminding me that the world is safe because I am with you.",
-            "THE COVEN’S REST: The Grimoire is closed. Bring me water and sit with me. No more commands, just a soft touch on my cheek."
-        ];
-
+        let activeMode = 'standard';
         const card = document.getElementById('card');
         const textDisplay = document.getElementById('prompt-text');
-        const ritualMsg = document.getElementById('ritual-msg');
+        const overlay = document.getElementById('confirm-overlay');
         const aura = document.getElementById('aura');
 
+        function requestRitual(mode) {
+            activeMode = mode;
+            overlay.style.display = 'flex';
+        }
+
+        function confirmRitual(isYes) {
+            overlay.style.display = 'none';
+            if (isYes) drawNew(activeMode);
+        }
+
         function drawNew(mode) {
-            if (mode === 'abyss' || mode === 'sanctuary') {
-                const pw = prompt("Enter the Secret Word to unlock this ritual:");
-                if (pw !== "elephants") {
-                    ritualMsg.innerText = "The Grimoire remains sealed to you.";
-                    return;
-                }
-            }
-
             card.classList.remove('flipped', 'burn');
-            textDisplay.classList.remove('mode-abyss', 'mode-sanctuary');
-            aura.classList.remove('aura-abyss', 'aura-sanctuary');
+            aura.style.background = '';
             
-            ritualMsg.innerText = "The shadows shift...";
-            
-            setTimeout(() => {
-                let pool = commands;
-                if (mode === 'abyss') {
-                    pool = abyssCommands;
-                    textDisplay.classList.add('mode-abyss');
-                    aura.classList.add('aura-abyss');
-                } else if (mode === 'sanctuary') {
-                    pool = sanctuaryCommands;
-                    textDisplay.classList.add('mode-sanctuary');
-                    aura.classList.add('aura-sanctuary');
-                }
+            // Set Aura Colors
+            if(mode === 'abyss') aura.style.background = 'radial-gradient(circle, var(--abyss-red) 0%, transparent 70%)';
+            if(mode === 'sanctuary') aura.style.background = 'radial-gradient(circle, var(--sanctuary-blue) 0%, transparent 70%)';
+            if(mode === 'tithe') aura.style.background = 'radial-gradient(circle, var(--tithe-green) 0%, transparent 70%)';
 
-                const random = pool[Math.floor(Math.random() * pool.length)];
-                textDisplay.innerText = random;
-                ritualMsg.innerText = mode.toUpperCase() + " decree inscribed.";
-                
-                // Auto-flip for special rituals
-                if (mode !== 'standard') {
-                    setTimeout(() => card.classList.add('flipped'), 500);
-                }
+            setTimeout(() => {
+                const pool = decks[mode];
+                textDisplay.innerText = pool[Math.floor(Math.random() * pool.length)];
+                if (mode !== 'standard') card.classList.add('flipped');
             }, 300);
         }
 
         function veto() {
             card.classList.add('burn');
-            ritualMsg.innerText = "The command is burned to ash...";
-            setTimeout(() => {
-                drawNew('standard');
-            }, 600);
+            setTimeout(() => drawNew('standard'), 600);
         }
     </script>
 </body>
